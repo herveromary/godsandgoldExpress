@@ -14,9 +14,19 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  const {
+    user_id,
+    god_id,
+    request,
+    offering,
+    date,
+    adress,
+    status,
+    user_name,
+  } = req.body;
   connection.query(
-    "INSERT INTO gift (request, offering, date, address, status) VALUES (?,?,?,?,?)",
-    [request, offering, date, address, status],
+    "INSERT INTO gift (user_id, god_id, request, offering, date, adress, status, user_name) VALUES (?,?,?,?,?,?,?,?)",
+    [user_id, god_id, request, offering, date, adress, status, user_name],
     (err, results) => {
       if (err) {
         console.log(err);
