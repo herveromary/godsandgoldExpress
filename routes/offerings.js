@@ -13,10 +13,41 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/gods/:idGod/users/:idUser", (req, res) => {
-  const { idGod, idUser } = req.params;
+router.post("/", (req, res) => {
   connection.query(
-    "SELECT go.name, go.description, go.picture, g.request FROM gift as g JOIN god as go ON go.id = g.god_id WHERE g.god_id = ? AND g.user_id = ?",
+    "INSERT INTO gift (request, offering, date, address, status) VALUES (?,?,?,?,?)",
+    [request, offering, date, address, status],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error saving a member");
+      } else {
+        res.status(200).send("New member created");
+      }
+    }
+  );
+});
+
+router.get("/gods/:idGod", (req, res) => {
+  const { idGod } = req.params;
+  connection.query(
+    "SELECT go.name, go.picture, g.request, g.offering, g.date, g.status FROM gift as g JOIN god as go ON go.id = g.god_id WHERE god_id = ?",
+    [idGod],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+router.get("/gods/:idGod/users/:idUser", (req, res) => {
+  const { idGod } = req.params;
+  connection.query(
+    "SELECT go.name, go.picture, g.request, g.offering, g.date, g.status FROM gift as g JOIN god as go ON go.id = g.god_id WHERE god_id = ? AND g.user_id = ?",
     [idGod, idUser],
     (err, results) => {
       if (err) {
@@ -28,5 +59,20 @@ router.get("/gods/:idGod/users/:idUser", (req, res) => {
     }
   );
 });
+// router.get("/users/:idUser", (req, res) => {
+//   const { idGod, idUser } = req.params;
+//   connection.query(
+//     "SELECT go.name, go.picture, g.request, g.offering, g.date, g.status FROM gift as g JOIN user as u ON user.id = u.user_id WHERE g.user_id = ?",
+//     [idGod, idUser],
+//     (err, results) => {
+//       if (err) {
+//         console.log(err);
+//         res.sendStatus(500);
+//       } else {
+//         res.json(results);
+//       }
+//     }
+//   );
+// });
 
 module.exports = router;
