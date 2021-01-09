@@ -55,7 +55,7 @@ router.get("/gods/:idGod", (req, res) => {
 });
 
 router.get("/gods/:idGod/users/:idUser", (req, res) => {
-  const { idGod } = req.params;
+  const { idGod, idUser } = req.params;
   connection.query(
     "SELECT go.name, go.picture, g.request, g.offering, g.date, g.status FROM gift as g JOIN god as go ON go.id = g.god_id WHERE god_id = ? AND g.user_id = ?",
     [idGod, idUser],
